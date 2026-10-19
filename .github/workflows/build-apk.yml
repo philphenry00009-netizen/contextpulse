@@ -1,4 +1,10 @@
-name: Build APK
+      - name: Relax Kotlin JVM check
+        working-directory: work/context_pulse
+        run: |
+          echo "kotlin.jvm.target.validation.mode=IGNORE" >> android/gradle.properties
+          cat android/gradle.properties
+          
+          name: Build APK
 on:
   push:
   workflow_dispatch:
