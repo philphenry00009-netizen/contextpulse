@@ -32,6 +32,15 @@ jobs:
           cp -r android_overlay/app/src/main/* android/app/src/main/
           cat > patch.py <<'PYEOF'
           import re, pathlib, sys
+
+          # Update workmanager version in pubspec.yaml to prevent compilation/duplicate class errors
+          pub_path = pathlib.Path("pubspec.yaml")
+          if pub_path.exists():
+              pub_text = pub_path.read_text()
+              pub_text = re.sub(r"workmanager:\s*[\d\.\^]+", "workmanager: ^0.10.10", pub_text)
+              pub_path.write_text(pub_text)
+              print("pubspec.yaml patched successfully")
+
           man = pathlib.Path("android/app/src/main/AndroidManifest.xml")
           m = man.read_text()
           perms = """
