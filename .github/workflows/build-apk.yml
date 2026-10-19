@@ -33,7 +33,7 @@ jobs:
           cat > patch.py <<'PYEOF'
           import re, pathlib, sys
 
-          # Update workmanager version in pubspec.yaml to prevent compilation/duplicate class errors
+          # Update workmanager version in pubspec.yaml
           pub_path = pathlib.Path("pubspec.yaml")
           if pub_path.exists():
               pub_text = pub_path.read_text()
@@ -98,11 +98,12 @@ jobs:
           PYEOF
           python3 patch.py
 
-      - name: Fix import clash
+      - name: Fix import clash & workmanager policy enum
         working-directory: work/context_pulse
         run: |
           sed -i "s#import 'package:geolocator/geolocator.dart';#import 'package:geolocator/geolocator.dart' show Geolocator, LocationPermission, Position;#" lib/data/signal_collector.dart
-          grep -n "geolocator" lib/data/signal_collector.dart
+          sed -i "s/ExistingWorkPolicy/ExistingPeriodicWorkPolicy/g" lib/application/background_service.dart
+          grep -n "ExistingPeriodicWorkPolicy" lib/application/background_service.dart
 
       - name: Relax Kotlin JVM check
         working-directory: work/context_pulse
