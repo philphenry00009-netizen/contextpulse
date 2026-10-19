@@ -1,10 +1,4 @@
-      - name: Relax Kotlin JVM check
-        working-directory: work/context_pulse
-        run: |
-          echo "kotlin.jvm.target.validation.mode=IGNORE" >> android/gradle.properties
-          cat android/gradle.properties
-          
-          name: Build APK
+Name: Build APK
 on:
   push:
   workflow_dispatch:
@@ -100,6 +94,12 @@ jobs:
         run: |
           sed -i "s#import 'package:geolocator/geolocator.dart';#import 'package:geolocator/geolocator.dart' show Geolocator, LocationPermission, Position;#" lib/data/signal_collector.dart
           grep -n "geolocator" lib/data/signal_collector.dart
+
+      - name: Relax Kotlin JVM check
+        working-directory: work/context_pulse
+        run: |
+          echo "kotlin.jvm.target.validation.mode=IGNORE" >> android/gradle.properties
+          cat android/gradle.properties
 
       - name: Build APK
         working-directory: work/context_pulse
